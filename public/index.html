@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Browser Control Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'spin': 'spin 1s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen p-5">
+    <div id="coordinateDisplay" class="fixed top-2 right-2 bg-black bg-opacity-80 text-white px-3 py-1 rounded font-mono text-sm hidden z-50"></div>
+    
+    <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-cyan-400 text-white p-6 text-center">
+            <h1 class="text-4xl font-bold mb-2">🌐 Cloud Browser</h1>
+            <p class="text-lg opacity-90">Control a remote browser instance through our API</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 xl:grid-cols-[350px_1fr] min-h-[80vh]">
+            <!-- Control Panel -->
+            <div class="bg-gray-50 p-6 border-r border-gray-200">
+                <!-- Status -->
+                <div id="status" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 font-semibold">
+                    Disconnected - Create a session to start
+                </div>
+                
+                <!-- Session Management -->
+                <div class="bg-white p-4 rounded-xl shadow-sm mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-blue-400">Session Management</h3>
+                    <button id="createSessionBtn" class="w-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 mb-3">
+                        Create New Session
+                    </button>
+                    <button id="closeSessionBtn" class="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 mb-3 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none" disabled>
+                        Close Session
+                    </button>
+                    <div class="mb-3">
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">Session ID:</label>
+                        <input type="text" id="sessionId" readonly placeholder="No active session" class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-400 focus:outline-none transition-colors">
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <div class="bg-white p-4 rounded-xl shadow-sm mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-blue-400">Navigation</h3>
+                    <div class="mb-3">
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">URL:</label>
+                        <input type="url" id="urlInput" placeholder="https://example.com" disabled class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-400 focus:outline-none transition-colors disabled:bg-gray-100">
+                    </div>
+                    <button id="navigateBtn" disabled class="w-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 mb-3 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+                        Navigate
+                    </button>
+                    <button id="screenshotBtn" disabled class="w-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+                        Take Screenshot
+                    </button>
+                </div>
+                
+                <!-- Interaction -->
+                <div class="bg-white p-4 rounded-xl shadow-sm mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-blue-400">Interaction</h3>
+                    <div class="mb-3">
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">Text to Type:</label>
+                        <input type="text" id="textInput" placeholder="Enter text to type" disabled class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-400 focus:outline-none transition-colors disabled:bg-gray-100">
+                    </div>
+                    <button id="typeBtn" disabled class="w-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 mb-3 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+                        Type Text
+                    </button>
+                    
+                    <div class="mb-3">
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">Scroll Amount:</label>
+                        <input type="number" id="scrollInput" placeholder="100" value="100" disabled class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-400 focus:outline-none transition-colors disabled:bg-gray-100">
+                    </div>
+                    <button id="scrollDownBtn" disabled class="w-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 mb-3 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+                        Scroll Down
+                    </button>
+                    <button id="scrollUpBtn" disabled class="w-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+                        Scroll Up
+                    </button>
+                </div>
+                
+                <!-- JavaScript Execution -->
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b-2 border-blue-400">JavaScript Execution</h3>
+                    <div class="mb-3">
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">JavaScript Code:</label>
+                        <textarea id="scriptInput" rows="4" placeholder="document.title" disabled class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-400 focus:outline-none transition-colors disabled:bg-gray-100 resize-none"></textarea>
+                    </div>
+                    <button id="executeBtn" disabled class="w-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 mb-3 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+                        Execute Script
+                    </button>
+                    <div class="mb-3">
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">Result:</label>
+                        <textarea id="scriptResult" rows="3" readonly class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg bg-gray-50 resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Browser Display -->
+            <div class="p-6 flex flex-col items-center justify-center">
+                <div id="browserContent" class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">No Browser Session Active</h2>
+                    <p class="text-gray-600">Create a new session to start controlling a remote browser</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
