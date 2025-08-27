@@ -1,12 +1,12 @@
 {
-  "name": "browser-api",
+  "name": "og",
   "version": "1.0.0",
   "description": "Cloud browser service with API endpoints",
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsc --noEmit --watch & tsx watch src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,9 +19,14 @@
   ],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "22.16.0"
+  },
   "dependencies": {
+    "cheerio": "^1.1.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "node-fetch": "^3.3.2",
     "puppeteer": "^24.17.0",
     "uuid": "^9.0.1",
     "ws": "^8.14.2"
